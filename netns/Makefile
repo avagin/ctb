@@ -1,8 +1,9 @@
 JOBS ?= 512
+NR ?= 1024
 run:
 	unshare -Urfpm --mount-proc ./run.sh ${JOBS}
 
 perf:
-	time -f '%E' unshare -Urfpm ./netns-creator.sh 1024
-	sleep 0.1
-	time -f '%E' unshare -Urn true
+	@echo "Create and destroy ${NR} namespaces"
+	time -f '%E' unshare -Urfpm ./netns-creator.sh ${NR}
+	time -f '%E' sh -c 'sleep 1; unshare -Urn true'
